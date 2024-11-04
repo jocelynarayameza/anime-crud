@@ -43,11 +43,19 @@ const servidor = http.createServer((req, res) => {
                 const contentString = readFileSync(dataAnime, "utf-8");
                 const contentJS = JSON.parse(contentString);
 
+
                 const anime = {
                     nombre: body.nombre,
                     genero: body.genero,
                     año: body.año,
                     autor: body.autor
+                }
+
+                const nombreExiste = Object.values(contentJS).some(anime => anime.nombre.toLowerCase() === body.nombre.toLowerCase());
+
+                if (nombreExiste) {
+                    res.writeHead(409)
+                    return res.end(JSON.stringify({ message: "Ya existe un anime con el mismo nombre" }));
                 }
 
                 contentJS[newId] = anime;
@@ -77,7 +85,7 @@ const servidor = http.createServer((req, res) => {
                 } else res.writeHead(409)
                 return res.end(JSON.stringify({ message: "Id de anime no encontrado" }));
 
-            
+
             });
 
         } else if (metodo == "DELETE") {
@@ -94,7 +102,8 @@ const servidor = http.createServer((req, res) => {
                     delete contentJS[params.id];
                     writeFileSync(dataAnime, JSON.stringify(contentJS), "utf-8")
                     return res.end(JSON.stringify({ message: "Anime eliminado", data: anime }))
-                }
+                } else res.writeHead(409)
+                return res.end(JSON.stringify({ message: "Id de anime no encontrado" }));
             }
         }
     }
@@ -102,3 +111,5 @@ const servidor = http.createServer((req, res) => {
 }).listen(port, () => {
     console.log(`Aplicación ejecutandose por el puerto ${port}`);
 })
+
+module.exports = { servidor, port }

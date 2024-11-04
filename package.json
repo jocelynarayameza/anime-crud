@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npx mocha index.test.js",
     "dev": "node --watch index.js"
   },
   "keywords": [],
@@ -12,5 +12,9 @@
   "license": "ISC",
   "dependencies": {
     "uuid": "^11.0.2"
+  },
+  "devDependencies": {
+    "chai": "^4.3.4",
+    "mocha": "^10.8.2"
   }
 }
